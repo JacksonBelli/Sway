@@ -1,0 +1,74 @@
+{{ 'sway.css' | asset_url | stylesheet_tag }}
+
+<section class="sway-features">
+  <div class="sway-features__inner">
+    <div class="sway-features__intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="sway-eyebrow" style="margin-bottom:16px;">{{ section.settings.eyebrow }}</div>
+      {%- endif -%}
+      <h2 class="sway-features__heading">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="sway-features__grid">
+      {%- for block in section.blocks -%}
+        <div class="sway-features__card" {{ block.shopify_attributes }}>
+          {%- if block.settings.icon != blank -%}
+            <div class="sway-features__icon-wrap">
+              <img src="{{ block.settings.icon | image_url: width: 44 }}" alt="" width="22" height="22">
+            </div>
+          {%- else -%}
+            <div class="sway-features__icon-wrap sway-features__icon-wrap--placeholder">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+          {%- endif -%}
+          <h3 class="sway-features__title">{{ block.settings.title }}</h3>
+          <p class="sway-features__body">{{ block.settings.body }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sway-features { padding: clamp(56px,8vw,112px) clamp(20px,5vw,48px); }
+  .sway-features__inner { max-width: var(--container-max); margin: 0 auto; }
+  .sway-features__intro { max-width: 620px; margin-bottom: 56px; }
+  .sway-features__heading { font-size: clamp(2rem,4vw,3rem); }
+  .sway-features__grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 40px; }
+  .sway-features__icon-wrap { width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--cobalt-50); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .sway-features__icon-wrap--placeholder { color: var(--accent); }
+  .sway-features__title { font-size: 19px; margin: 0 0 12px; }
+  .sway-features__body { font-size: 15px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+  @media (max-width: 989px) { .sway-features__grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 749px) { .sway-features__grid { grid-template-columns: 1fr; } }
+</style>
+
+{% schema %}
+{
+  "name": "Sway features grid",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How it works" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A coach for your attention, worn like glasses." }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon (optional SVG/PNG)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Focus index" },
+        { "type": "textarea", "id": "body", "label": "Body", "default": "See your attention quality hour by hour and learn when your mind performs best." }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Sway features grid",
+    "blocks": [
+      { "type": "feature", "settings": { "title": "Focus index", "body": "See your attention quality hour by hour and learn when your mind performs best." } },
+      { "type": "feature", "settings": { "title": "Flow cues", "body": "Gentle prompts keep you in deep work and pull you back the moment you drift." } },
+      { "type": "feature", "settings": { "title": "Wind-down", "body": "Evening cues help your mind downshift so tomorrow starts sharp." } },
+      { "type": "feature", "settings": { "title": "All-day battery", "body": "14 hours on a charge. A 20-minute top-up gets you through the afternoon." } }
+    ]
+  }]
+}
+{% endschema %}

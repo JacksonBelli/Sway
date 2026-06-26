@@ -1,0 +1,46 @@
+{{ 'sway.css' | asset_url | stylesheet_tag }}
+
+<section class="sway-stats-band">
+  <div class="sway-stats-band__inner">
+    {%- for block in section.blocks -%}
+      <div class="sway-stats-band__stat" {{ block.shopify_attributes }}>
+        <div class="sway-stats-band__number">{{ block.settings.number }}</div>
+        <div class="sway-stats-band__label">{{ block.settings.label }}</div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+<style>
+  .sway-stats-band { background: var(--ink); color: var(--sand-50); }
+  .sway-stats-band__inner { max-width: var(--container-max); margin: 0 auto; padding: 48px clamp(20px,5vw,48px); display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; }
+  .sway-stats-band__number { font-family: var(--font-display); font-weight: 800; font-size: clamp(2rem,3.5vw,2.8rem); letter-spacing: -0.03em; color: #fff; }
+  .sway-stats-band__label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; color: var(--sand-400); margin-top: 8px; }
+  @media (max-width: 749px) { .sway-stats-band__inner { grid-template-columns: repeat(2,1fr); } }
+</style>
+
+{% schema %}
+{
+  "name": "Sway stats band",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number / value", "default": "+22%" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Avg. focus index after 30 days" }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Sway stats band",
+    "blocks": [
+      { "type": "stat", "settings": { "number": "+22%", "label": "Avg. focus index after 30 days" } },
+      { "type": "stat", "settings": { "number": "14h", "label": "Active battery life" } },
+      { "type": "stat", "settings": { "number": "36g", "label": "Lighter than most sunglasses" } },
+      { "type": "stat", "settings": { "number": "4.8★", "label": "Average rating, 1,204 reviews" } }
+    ]
+  }]
+}
+{% endschema %}

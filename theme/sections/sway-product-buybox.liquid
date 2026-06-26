@@ -1,0 +1,316 @@
+{{ 'sway.css' | asset_url | stylesheet_tag }}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<section class="sway-pdp">
+  <div class="sway-pdp__inner">
+
+    {%- comment -%} Gallery {%- endcomment -%}
+    <div class="sway-pdp__gallery">
+      <div class="sway-pdp__thumbs" id="sway-thumbs">
+        {%- for media in product.media -%}
+          <button
+            class="sway-pdp__thumb{% if forloop.first %} is-active{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            aria-label="{{ media.alt | default: product.title | escape }}"
+          >
+            <img src="{{ media | image_url: width: 160 }}" alt="{{ media.alt | escape }}" loading="lazy">
+          </button>
+        {%- endfor -%}
+      </div>
+      <div class="sway-pdp__main-image" id="sway-main-img">
+        {%- assign first_media = product.media | first -%}
+        <img
+          id="sway-main-img-el"
+          src="{{ first_media | image_url: width: 1200 }}"
+          alt="{{ first_media.alt | default: product.title | escape }}"
+          loading="eager"
+        >
+      </div>
+    </div>
+
+    {%- comment -%} Buy box {%- endcomment -%}
+    <div class="sway-pdp__buybox">
+
+      {%- if section.settings.badge != blank -%}
+        <div class="sway-pdp__badge">{{ section.settings.badge }}</div>
+      {%- endif -%}
+
+      <h1 class="sway-pdp__title">{{ product.title }}</h1>
+
+      <div class="sway-pdp__price" id="sway-price">
+        <span class="sway-pdp__price-current">{{ current_variant.price | money }}</span>
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <span class="sway-pdp__price-compare">{{ current_variant.compare_at_price | money }}</span>
+          <span class="sway-pdp__save-badge">Save {{ current_variant.compare_at_price | minus: current_variant.price | money }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- if product.description != blank -%}
+        <div class="sway-pdp__desc">{{ product.description }}</div>
+      {%- endif -%}
+
+      {%- comment -%} Variant selector {%- endcomment -%}
+      {%- unless product.has_only_default_variant -%}
+        {%- for option in product.options_with_values -%}
+          <div class="sway-pdp__option">
+            <div class="sway-pdp__option-label">
+              <span class="sway-eyebrow">{{ option.name }}</span>
+              <span id="sway-opt-val-{{ forloop.index0 }}" class="sway-pdp__option-current">{{ option.selected_value }}</span>
+            </div>
+            <div class="sway-pdp__option-values">
+              {%- for value in option.values -%}
+                <button
+                  class="sway-pdp__opt-btn{% if option.selected_value == value %} is-active{% endif %}"
+                  data-option-index="{{ forloop.parentloop.index0 }}"
+                  data-option-value="{{ value | escape }}"
+                  aria-label="{{ option.name }}: {{ value }}"
+                >
+                  {{ value }}
+                </button>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endunless -%}
+
+      {%- comment -%} Add to cart {%- endcomment -%}
+      <form action="/cart/add" method="post" id="sway-atc-form" class="sway-pdp__form">
+        <input type="hidden" name="id" id="sway-variant-id" value="{{ current_variant.id }}">
+        <div class="sway-pdp__qty-row">
+          <div class="sway-pdp__qty">
+            <button type="button" class="sway-qty-btn" id="sway-qty-down" aria-label="Decrease quantity">−</button>
+            <input type="number" name="quantity" id="sway-qty" value="1" min="1" max="5" class="sway-qty-input" aria-label="Quantity">
+            <button type="button" class="sway-qty-btn" id="sway-qty-up" aria-label="Increase quantity">+</button>
+          </div>
+          <button type="submit" class="sway-btn sway-pdp__atc" id="sway-atc-btn"
+            {%- unless current_variant.available -%} disabled aria-disabled="true"{%- endunless -%}>
+            {%- if current_variant.available -%}
+              Add to cart — <span id="sway-atc-price">{{ current_variant.price | money }}</span>
+            {%- else -%}
+              Sold out
+            {%- endif -%}
+          </button>
+        </div>
+        <a href="/checkout?qty=1&id={{ current_variant.id }}" class="sway-btn sway-btn--secondary sway-pdp__buynow">Buy it now</a>
+      </form>
+
+      <p class="sway-pdp__trust">Free shipping · 30-day returns · 2-year warranty</p>
+
+      {%- comment -%} Specs {%- endcomment -%}
+      {%- if section.blocks.size > 0 -%}
+        <div class="sway-pdp__specs">
+          <div class="sway-eyebrow" style="margin-bottom:4px;">Specifications</div>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'spec' -%}
+              <div class="sway-pdp__spec-row{% if forloop.last %} is-last{% endif %}" {{ block.shopify_attributes }}>
+                <span class="sway-pdp__spec-label">{{ block.settings.label }}</span>
+                <span class="sway-pdp__spec-value">{{ block.settings.value }}</span>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} FAQ accordion {%- endcomment -%}
+  {%- assign faq_blocks = section.blocks | where: 'type', 'faq' -%}
+  {%- if faq_blocks.size > 0 -%}
+    <div class="sway-pdp__faq">
+      <h2 class="sway-pdp__faq-heading">{{ section.settings.faq_heading | default: 'Questions, answered.' }}</h2>
+      {%- for block in faq_blocks -%}
+        <details class="sway-pdp__faq-item" {{ block.shopify_attributes }}>
+          <summary class="sway-pdp__faq-q">{{ block.settings.question }}<span class="sway-pdp__faq-icon" aria-hidden="true"></span></summary>
+          <div class="sway-pdp__faq-a">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  .sway-pdp { padding: clamp(28px,4vw,56px) clamp(20px,5vw,48px); }
+  .sway-pdp__inner { max-width: var(--container-max); margin: 0 auto; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px,5vw,72px); align-items: start; }
+
+  /* Gallery */
+  .sway-pdp__gallery { display: grid; grid-template-columns: 72px 1fr; gap: 16px; }
+  .sway-pdp__thumbs { display: flex; flex-direction: column; gap: 12px; }
+  .sway-pdp__thumb { aspect-ratio: 1; border-radius: var(--radius-md); cursor: pointer; overflow: hidden; background: linear-gradient(135deg, var(--sand-100), var(--sand-200)); border: 1.5px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; padding: 0; }
+  .sway-pdp__thumb.is-active { border: 2px solid var(--accent); }
+  .sway-pdp__thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .sway-pdp__main-image { aspect-ratio: 1/1; border-radius: var(--radius-xl); overflow: hidden; background: radial-gradient(120% 120% at 55% 28%, #fff, var(--sand-200) 72%, var(--sand-300)); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); }
+  .sway-pdp__main-image img { width: 88%; filter: drop-shadow(0 24px 30px rgba(42,33,26,0.30)); }
+
+  /* Buy box */
+  .sway-pdp__badge { display: inline-block; padding: 4px 12px; border-radius: var(--radius-pill); background: var(--accent); color: #fff; font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 18px; }
+  .sway-pdp__title { font-size: clamp(2.2rem,4vw,3.2rem); margin: 0 0 14px; }
+  .sway-pdp__price { display: flex; align-items: baseline; gap: 12px; margin: 0 0 8px; }
+  .sway-pdp__price-current { font-family: var(--font-display); font-weight: 800; font-size: 32px; letter-spacing: -0.02em; }
+  .sway-pdp__price-compare { font-family: var(--font-mono); font-size: 16px; color: var(--text-muted); text-decoration: line-through; }
+  .sway-pdp__save-badge { padding: 3px 10px; border-radius: var(--radius-pill); background: var(--green-100); color: var(--green-500); font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
+  .sway-pdp__desc { font-size: 16px; color: var(--text-secondary); line-height: 1.6; margin: 16px 0 28px; max-width: 460px; }
+
+  /* Options */
+  .sway-pdp__option { margin-bottom: 24px; }
+  .sway-pdp__option-label { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .sway-pdp__option-current { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+  .sway-pdp__option-values { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sway-pdp__opt-btn { padding: 6px 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-default); background: transparent; cursor: pointer; font-family: var(--font-body); font-size: 14px; color: var(--text-primary); transition: all var(--dur-fast) var(--ease-out); }
+  .sway-pdp__opt-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .sway-pdp__opt-btn.is-active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+  /* ATC form */
+  .sway-pdp__form { display: flex; flex-direction: column; gap: 14px; }
+  .sway-pdp__qty-row { display: flex; gap: 14px; align-items: center; }
+  .sway-pdp__qty { display: flex; align-items: center; border: 1.5px solid var(--border-default); border-radius: var(--radius-pill); overflow: hidden; height: 56px; }
+  .sway-qty-btn { width: 44px; height: 100%; background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text-primary); display: flex; align-items: center; justify-content: center; transition: background var(--dur-fast); }
+  .sway-qty-btn:hover { background: var(--sand-100); }
+  .sway-qty-input { width: 44px; border: none; text-align: center; font-family: var(--font-display); font-size: 16px; font-weight: 600; background: none; -moz-appearance: textfield; }
+  .sway-qty-input::-webkit-inner-spin-button, .sway-qty-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .sway-pdp__atc { flex: 1; justify-content: center; }
+  .sway-btn { display: inline-flex; align-items: center; height: 56px; padding: 0 30px; border-radius: var(--radius-pill); background: var(--accent); color: #fff; font-family: var(--font-display); font-weight: 600; font-size: 17px; text-decoration: none; box-shadow: var(--shadow-accent); transition: background var(--dur-fast) var(--ease-out); border: none; cursor: pointer; }
+  .sway-btn:hover { background: var(--accent-hover); text-decoration: none; }
+  .sway-btn:disabled { background: var(--sand-300); color: var(--text-muted); box-shadow: none; cursor: not-allowed; }
+  .sway-btn--secondary { background: transparent; color: var(--accent); border: 2px solid var(--accent); box-shadow: none; justify-content: center; }
+  .sway-btn--secondary:hover { background: var(--accent-soft); }
+  .sway-pdp__buynow { width: 100%; }
+  .sway-pdp__trust { margin: 4px 0 0; font-family: var(--font-mono); font-size: 12.5px; color: var(--text-muted); text-align: center; }
+
+  /* Specs */
+  .sway-pdp__specs { margin-top: 36px; }
+  .sway-pdp__spec-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
+  .sway-pdp__spec-row.is-last { border-bottom: none; }
+  .sway-pdp__spec-label { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+  .sway-pdp__spec-value { font-family: var(--font-body); font-size: 14px; font-weight: 500; color: var(--text-primary); }
+
+  /* FAQ */
+  .sway-pdp__faq { max-width: 760px; margin: clamp(56px,8vw,96px) auto 0; padding: 0 clamp(20px,5vw,48px); }
+  .sway-pdp__faq-heading { font-size: clamp(1.8rem,3.5vw,2.4rem); margin-bottom: 24px; }
+  .sway-pdp__faq-item { border-bottom: 1px solid var(--border-subtle); }
+  .sway-pdp__faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 17px; list-style: none; }
+  .sway-pdp__faq-q::-webkit-details-marker { display: none; }
+  .sway-pdp__faq-icon { width: 20px; height: 20px; position: relative; flex-shrink: 0; }
+  .sway-pdp__faq-icon::before, .sway-pdp__faq-icon::after { content: ''; position: absolute; background: var(--text-primary); border-radius: 2px; transition: transform var(--dur-fast) var(--ease-out); }
+  .sway-pdp__faq-icon::before { width: 2px; height: 14px; top: 3px; left: 9px; }
+  .sway-pdp__faq-icon::after  { width: 14px; height: 2px; top: 9px; left: 3px; }
+  details[open] .sway-pdp__faq-icon::before { transform: rotate(90deg); opacity: 0; }
+  .sway-pdp__faq-a { padding: 0 0 20px; font-size: 16px; color: var(--text-secondary); line-height: 1.65; }
+
+  @media (max-width: 749px) {
+    .sway-pdp__inner { grid-template-columns: 1fr; }
+    .sway-pdp__gallery { grid-template-columns: 1fr; }
+    .sway-pdp__thumbs { flex-direction: row; }
+    .sway-pdp__thumb { width: 64px; flex-shrink: 0; }
+    .sway-pdp__qty-row { flex-direction: column; }
+    .sway-pdp__atc { width: 100%; justify-content: center; }
+  }
+</style>
+
+<script>
+  (function () {
+    var productData = {{ product | json }};
+    var variants = productData.variants;
+    var selectedOptions = {{ product.selected_or_first_available_variant.options | json }};
+
+    function findVariant(opts) {
+      return variants.find(function (v) {
+        return v.options.every(function (o, i) { return o === opts[i]; });
+      });
+    }
+
+    function updatePrice(variant) {
+      var priceEl = document.getElementById('sway-atc-price');
+      if (priceEl && variant) {
+        priceEl.textContent = (variant.price / 100).toLocaleString('en-US', { style: 'currency', currency: '{{ shop.currency }}' });
+      }
+      document.getElementById('sway-variant-id').value = variant ? variant.id : '';
+      var atcBtn = document.getElementById('sway-atc-btn');
+      if (atcBtn) {
+        atcBtn.disabled = !(variant && variant.available);
+        if (!variant || !variant.available) { atcBtn.textContent = 'Sold out'; }
+      }
+    }
+
+    /* Option buttons */
+    document.querySelectorAll('.sway-pdp__opt-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var idx = parseInt(btn.dataset.optionIndex);
+        selectedOptions[idx] = btn.dataset.optionValue;
+        document.querySelectorAll('[data-option-index="' + idx + '"]').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        var valEl = document.getElementById('sway-opt-val-' + idx);
+        if (valEl) valEl.textContent = btn.dataset.optionValue;
+        updatePrice(findVariant(selectedOptions));
+      });
+    });
+
+    /* Quantity stepper */
+    var qtyInput = document.getElementById('sway-qty');
+    document.getElementById('sway-qty-down').addEventListener('click', function () {
+      qtyInput.value = Math.max(1, parseInt(qtyInput.value) - 1);
+    });
+    document.getElementById('sway-qty-up').addEventListener('click', function () {
+      qtyInput.value = Math.min(5, parseInt(qtyInput.value) + 1);
+    });
+
+    /* Gallery thumb swap */
+    var medias = {{ product.media | json }};
+    document.querySelectorAll('.sway-pdp__thumb').forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        var idx = parseInt(thumb.dataset.index);
+        document.querySelectorAll('.sway-pdp__thumb').forEach(function (t) { t.classList.remove('is-active'); });
+        thumb.classList.add('is-active');
+        var mainImg = document.getElementById('sway-main-img-el');
+        if (mainImg && medias[idx]) {
+          mainImg.src = medias[idx].src;
+          mainImg.alt = medias[idx].alt || '';
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sway product buy box",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "badge", "label": "Badge text", "default": "The Oura for your mind." },
+    { "type": "text", "id": "faq_heading", "label": "FAQ heading", "default": "Questions, answered." }
+  ],
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Spec row",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Battery life" },
+        { "type": "text", "id": "value", "label": "Value", "default": "14 hours active" }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How does Sway sharpen focus?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "The S1 reads subtle attention signals and delivers gentle, research-backed neural cues that keep you anchored on the task in front of you." }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Sway product buy box",
+    "blocks": [
+      { "type": "spec", "settings": { "label": "Battery life", "value": "14 hours active" } },
+      { "type": "spec", "settings": { "label": "Weight", "value": "36 g" } },
+      { "type": "spec", "settings": { "label": "Frame", "value": "Aerospace titanium" } },
+      { "type": "spec", "settings": { "label": "Connectivity", "value": "Bluetooth LE 5.3" } },
+      { "type": "spec", "settings": { "label": "Sensors", "value": "6-axis IMU + EEG-lite" } },
+      { "type": "spec", "settings": { "label": "Water resistance", "value": "IPX4" } },
+      { "type": "faq", "settings": { "question": "How does Sway sharpen focus?", "answer": "The S1 reads subtle attention signals and delivers gentle, research-backed neural cues that keep you anchored on the task in front of you — no screens, no stimulants, no notifications." } },
+      { "type": "faq", "settings": { "question": "Will people know I'm wearing them?", "answer": "They look like premium everyday eyewear. The performance layer is invisible — no lights, no lenses-in-your-face HUD." } },
+      { "type": "faq", "settings": { "question": "Shipping & returns", "answer": "Free carbon-neutral shipping in 2–4 days. Try Sway for 30 days; if it isn't for you, send it back for a full refund." } },
+      { "type": "faq", "settings": { "question": "Warranty", "answer": "Every S1 is covered by a 2-year limited warranty." } }
+    ]
+  }]
+}
+{% endschema %}

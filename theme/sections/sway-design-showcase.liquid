@@ -1,0 +1,74 @@
+{{ 'sway.css' | asset_url | stylesheet_tag }}
+
+<section class="sway-design">
+  <div class="sway-design__inner">
+    <div class="sway-design__media">
+      {%- if section.settings.image != blank -%}
+        <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="{{ section.settings.image.alt | escape }}" loading="lazy">
+      {%- else -%}
+        <img src="{{ 's1-side.png' | asset_url }}" alt="Sway S1 profile" loading="lazy">
+      {%- endif -%}
+    </div>
+    <div class="sway-design__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="sway-eyebrow" style="margin-bottom:16px;">{{ section.settings.eyebrow }}</div>
+      {%- endif -%}
+      <h2 class="sway-design__heading">{{ section.settings.heading }}</h2>
+      {%- if section.settings.body != blank -%}
+        <p class="sway-design__body">{{ section.settings.body }}</p>
+      {%- endif -%}
+      <div class="sway-design__specs">
+        {%- for block in section.blocks -%}
+          <div {{ block.shopify_attributes }}>
+            <div class="sway-design__spec-n">{{ block.settings.number }}</div>
+            <div class="sway-design__spec-l">{{ block.settings.label }}</div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sway-design { background: var(--sand-50); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
+  .sway-design__inner { max-width: var(--container-max); margin: 0 auto; padding: clamp(56px,8vw,104px) clamp(20px,5vw,48px); display: grid; grid-template-columns: 1.02fr 0.98fr; gap: clamp(32px,5vw,72px); align-items: center; }
+  .sway-design__media { aspect-ratio: 5/4; border-radius: var(--radius-xl); overflow: hidden; background: radial-gradient(120% 120% at 50% 30%, #fff, var(--sand-200) 70%, var(--sand-300)); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); }
+  .sway-design__media img { width: 92%; filter: drop-shadow(0 22px 30px rgba(42,33,26,0.30)); }
+  .sway-design__heading { font-size: clamp(2rem,4vw,3rem); }
+  .sway-design__body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; margin: 20px 0 36px; max-width: 460px; }
+  .sway-design__specs { display: flex; gap: clamp(24px,4vw,48px); }
+  .sway-design__spec-n { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem,3vw,2.2rem); letter-spacing: -0.02em; }
+  .sway-design__spec-l { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-top: 6px; }
+  @media (max-width: 749px) { .sway-design__inner { grid-template-columns: 1fr; } }
+</style>
+
+{% schema %}
+{
+  "name": "Sway design showcase",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Product image (defaults to S1 side)" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The design" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Engineered to disappear." },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Aerospace-titanium frames hide the entire performance layer. No lights, no lenses in your face — they look and feel like the glasses you already love." }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Spec callout",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "36g" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Featherlight" }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Sway design showcase",
+    "blocks": [
+      { "type": "spec", "settings": { "number": "36g", "label": "Featherlight" } },
+      { "type": "spec", "settings": { "number": "14h", "label": "All-day battery" } },
+      { "type": "spec", "settings": { "number": "IPX4", "label": "Sweat-proof" } }
+    ]
+  }]
+}
+{% endschema %}

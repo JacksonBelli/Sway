@@ -1,0 +1,42 @@
+{{ 'sway.css' | asset_url | stylesheet_tag }}
+
+<section class="sway-tech">
+  <div class="sway-tech__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <div class="sway-eyebrow" style="color:var(--cobalt-300);margin-bottom:16px;">{{ section.settings.eyebrow }}</div>
+    {%- endif -%}
+    <h2 class="sway-tech__heading">{{ section.settings.heading }}</h2>
+    <div class="sway-tech__image-wrap">
+      {%- if section.settings.image != blank -%}
+        <img src="{{ section.settings.image | image_url: width: 1400 }}" alt="{{ section.settings.image.alt | escape }}" loading="lazy">
+      {%- else -%}
+        <img src="{{ 's1-exploded.png' | asset_url }}" alt="Sway S1 exploded view showing internal sensors, battery and board" loading="lazy">
+      {%- endif -%}
+    </div>
+    {%- if section.settings.caption != blank -%}
+      <p class="sway-tech__caption">{{ section.settings.caption }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .sway-tech { background: var(--ink); color: var(--sand-50); }
+  .sway-tech__inner { max-width: 1100px; margin: 0 auto; padding: clamp(56px,8vw,104px) clamp(20px,5vw,48px); text-align: center; }
+  .sway-tech__heading { font-size: clamp(1.9rem,4vw,2.8rem); color: #fff; max-width: 640px; margin: 0 auto; }
+  .sway-tech__image-wrap { margin-top: clamp(32px,5vw,56px); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-lg); }
+  .sway-tech__image-wrap img { width: 100%; display: block; }
+  .sway-tech__caption { margin-top: 22px; font-family: var(--font-mono); font-size: 13px; color: var(--sand-400); }
+</style>
+
+{% schema %}
+{
+  "name": "Sway tech reveal",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The technology" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A focus lab, folded into a frame." },
+    { "type": "image_picker", "id": "image", "label": "Exploded / tech image (defaults to S1 render)" },
+    { "type": "text", "id": "caption", "label": "Caption below image", "default": "EEG-lite sensors · 6-axis IMU · custom focus board · all-day cell" }
+  ],
+  "presets": [{ "name": "Sway tech reveal" }]
+}
+{% endschema %}

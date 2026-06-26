@@ -1,0 +1,56 @@
+{%- comment -%}
+  Sway — Hero section. Dawn-compatible.
+  Place this file in your theme's /sections folder. It can then be added to any
+  page from the theme editor ("Add section" → "Sway hero"). Loads sway.css.
+{%- endcomment -%}
+
+{{ 'sway.css' | asset_url | stylesheet_tag }}
+
+<section class="sway-hero" style="background: var(--bg-page);">
+  <div class="sway-hero__grid">
+    <div class="sway-hero__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="sway-eyebrow" style="color: var(--accent); margin-bottom: 20px;">{{ section.settings.eyebrow }}</div>
+      {%- endif -%}
+      <h1 class="sway-display-xl" style="margin:0;">{{ section.settings.heading }}</h1>
+      {%- if section.settings.subtext != blank -%}
+        <p style="font-size: clamp(1.05rem,1.6vw,1.3rem); color: var(--text-secondary); line-height:1.55; margin:24px 0 32px; max-width:440px;">{{ section.settings.subtext }}</p>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="sway-btn">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+    </div>
+    <div class="sway-hero__media">
+      {%- if section.settings.image != blank -%}
+        <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="{{ section.settings.image.alt | escape }}" loading="lazy">
+      {%- else -%}
+        <img src="{{ 's1-front.png' | asset_url }}" alt="Sway S1 Frames" loading="lazy">
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sway-hero { padding: clamp(40px,6vw,80px) clamp(20px,5vw,48px); }
+  .sway-hero__grid { max-width: var(--container-max); margin: 0 auto; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px,5vw,72px); align-items: center; }
+  .sway-hero__media { aspect-ratio: 1/1; border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; background: radial-gradient(120% 120% at 68% 22%, #fff 0%, var(--sand-200) 58%, var(--sand-300) 100%); }
+  .sway-hero__media img { width: 86%; filter: drop-shadow(0 28px 36px rgba(42,33,26,0.34)); }
+  .sway-btn { display: inline-flex; align-items: center; height: 56px; padding: 0 30px; border-radius: var(--radius-pill); background: var(--accent); color: #fff; font-family: var(--font-display); font-weight: 600; font-size: 17px; text-decoration: none; box-shadow: var(--shadow-accent); transition: background var(--dur-fast) var(--ease-out); }
+  .sway-btn:hover { background: var(--accent-hover); }
+  @media (max-width: 749px) { .sway-hero__grid { grid-template-columns: 1fr; } }
+</style>
+
+{% schema %}
+{
+  "name": "Sway hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "— Neural Performance Eyewear" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Train the mind." },
+    { "type": "textarea", "id": "subtext", "label": "Subtext", "default": "The Oura for your mind. Sway S1 reads your focus and gently keeps you in it — all day, no screens." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop S1 — $349" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Product image (defaults to S1 render)" }
+  ],
+  "presets": [{ "name": "Sway hero" }]
+}
+{% endschema %}

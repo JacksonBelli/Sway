@@ -1,0 +1,270 @@
+/* Sway Labs brand stylesheet — generated for Shopify.
+ * Drop in theme/assets/ and load with {{ 'sway.css' | asset_url | stylesheet_tag }}.
+ * Self-contained (no @import chain). Fonts via Google Fonts.
+ */
+
+/* ===== tokens/fonts.css ===== */
+/* Sway Labs — Webfonts
+ * Display + body: Archivo (athletic grotesque, weights 400–900)
+ * Mono / technical labels: JetBrains Mono
+ * NOTE: hosted via Google Fonts. To ship fully offline, download the
+ * woff2 binaries and replace this @import with local @font-face rules.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ===== tokens/colors.css ===== */
+/* Sway Labs — Color tokens
+ * Warm organic neutrals (sand / clay) + electric cobalt accent.
+ * High contrast: warm near-black ink on sand paper, cobalt as the signal color.
+ */
+:root {
+  /* ---- Sand / warm neutral scale ---- */
+  --sand-50:  #FBF8F2;  /* lightest paper */
+  --sand-100: #F4EEE3;
+  --sand-200: #EAE1D1;
+  --sand-300: #DBCEB8;
+  --sand-400: #C6B496;  /* clay */
+  --sand-500: #A89279;
+  --sand-600: #8A735A;
+  --sand-700: #6A5642;
+  --sand-800: #443629;
+  --sand-900: #2A211A;
+
+  /* Warm near-black ink + true white */
+  --ink:   #1A1611;
+  --ink-2: #3A332A;     /* softened ink for secondary text */
+  --white: #FFFFFF;
+
+  /* ---- Electric cobalt (brand signal) ---- */
+  --cobalt-50:  #EEF1FF;
+  --cobalt-100: #DBE1FF;
+  --cobalt-200: #B6C2FF;
+  --cobalt-300: #8A9CFF;
+  --cobalt-400: #5570FF;
+  --cobalt-500: #2347FF;  /* primary */
+  --cobalt-600: #1A38D6;  /* hover */
+  --cobalt-700: #1429A8;  /* active / pressed */
+  --cobalt-800: #101F7A;
+
+  /* ---- Semantic (warm-tuned) ---- */
+  --green-500:  #2F8F5B;
+  --green-100:  #DCEFE2;
+  --amber-500:  #C8841C;
+  --amber-100:  #F6E8CC;
+  --red-500:    #CF3B1E;
+  --red-100:    #F7DDD4;
+
+  /* ---- Semantic surface / text aliases ---- */
+  --bg-page:        var(--sand-100);
+  --bg-paper:       var(--sand-50);
+  --surface-card:   var(--white);
+  --surface-sunken: var(--sand-200);
+  --surface-inverse:var(--ink);
+
+  --text-primary:   var(--ink);
+  --text-secondary: var(--ink-2);
+  --text-muted:     var(--sand-600);
+  --text-inverse:   var(--sand-50);
+  --text-accent:    var(--cobalt-600);
+  --text-on-accent: var(--white);
+
+  --border-subtle:  var(--sand-200);
+  --border-default: var(--sand-300);
+  --border-strong:  var(--ink);
+
+  --accent:         var(--cobalt-500);
+  --accent-hover:   var(--cobalt-600);
+  --accent-active:  var(--cobalt-700);
+  --accent-soft:    var(--cobalt-50);
+
+  --focus-ring:     var(--cobalt-400);
+
+  --success: var(--green-500);
+  --warning: var(--amber-500);
+  --danger:  var(--red-500);
+}
+
+/* ===== tokens/typography.css ===== */
+/* Sway Labs — Typography tokens */
+:root {
+  /* Families */
+  --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:    'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Weights */
+  --fw-regular:  400; /* @kind font */
+  --fw-medium:   500; /* @kind font */
+  --fw-semibold: 600; /* @kind font */
+  --fw-bold:     700; /* @kind font */
+  --fw-extra:    800; /* @kind font */
+  --fw-black:    900; /* @kind font */
+
+  /* Fluid display scale (athletic, tight) */
+  --text-display-xl: clamp(3rem, 7vw, 5.5rem);   /* hero */
+  --text-display-l:  clamp(2.4rem, 5vw, 4rem);
+  --text-display-m:  clamp(2rem, 3.6vw, 3rem);
+
+  /* Static UI / text scale */
+  --text-h1:   2.25rem;   /* 36 */
+  --text-h2:   1.75rem;   /* 28 */
+  --text-h3:   1.375rem;  /* 22 */
+  --text-h4:   1.125rem;  /* 18 */
+  --text-lg:   1.0625rem; /* 17 */
+  --text-base: 1rem;      /* 16 */
+  --text-sm:   0.875rem;  /* 14 */
+  --text-xs:   0.75rem;   /* 12 */
+  --text-eyebrow: 0.75rem;/* mono label */
+
+  /* Line heights */
+  --lh-tight:   1.04; /* @kind other */
+  --lh-snug:    1.18; /* @kind other */
+  --lh-normal:  1.5;  /* @kind other */
+  --lh-relaxed: 1.65; /* @kind other */
+
+  /* Letter spacing */
+  --tracking-tight:   -0.03em; /* @kind other */
+  --tracking-snug:    -0.01em; /* @kind other */
+  --tracking-normal:  0;       /* @kind other */
+  --tracking-wide:    0.04em;  /* @kind other */
+  --tracking-eyebrow: 0.16em;  /* @kind other */
+}
+
+/* ===== tokens/spacing.css ===== */
+/* Sway Labs — Spacing tokens (4px base grid) */
+:root {
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* Layout */
+  --container-max: 1200px;
+  --container-pad: clamp(20px, 5vw, 64px);
+  --section-y:     clamp(64px, 9vw, 128px); /* @kind spacing */
+}
+
+/* ===== tokens/radius.css ===== */
+/* Sway Labs — Radius tokens
+ * Moderate, premium rounding. Pills for buttons/badges, soft cards.
+ */
+:root {
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+  --radius-xl:   28px;
+  --radius-pill: 999px;
+}
+
+/* ===== tokens/elevation.css ===== */
+/* Sway Labs — Elevation / shadow tokens
+ * Warm-tinted, soft shadows (shadow color derived from warm ink, not pure black).
+ */
+:root {
+  --shadow-xs: 0 1px 2px rgba(42, 33, 26, 0.06);
+  --shadow-sm: 0 2px 6px rgba(42, 33, 26, 0.08);
+  --shadow-md: 0 8px 24px rgba(42, 33, 26, 0.10);
+  --shadow-lg: 0 18px 48px rgba(42, 33, 26, 0.14);
+  --shadow-xl: 0 32px 80px rgba(42, 33, 26, 0.18);
+
+  /* Cobalt glow — used sparingly on the primary CTA / focus */
+  --shadow-accent: 0 8px 28px rgba(35, 71, 255, 0.30);
+
+  /* Pressed inset */
+  --shadow-inset: inset 0 2px 4px rgba(42, 33, 26, 0.12);
+}
+
+/* ===== tokens/motion.css ===== */
+/* Sway Labs — Motion tokens
+ * Snappy, confident easing. Quick fades + subtle press-shrink. No bounce on UI.
+ */
+:root {
+  --dur-instant: 80ms;  /* @kind other */
+  --dur-fast:    140ms; /* @kind other */
+  --dur-base:    220ms; /* @kind other */
+  --dur-slow:    400ms; /* @kind other */
+  --dur-slower:  700ms; /* @kind other */
+
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);     /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);    /* @kind other */
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);        /* @kind other */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* @kind other */
+
+  --press-scale: 0.97; /* @kind other */
+}
+
+/* ===== tokens/base.css ===== */
+/* Sway Labs — base resets + primitives.
+ * Light: sets warm paper background, ink text, body font defaults.
+ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--lh-normal);
+  color: var(--text-primary);
+  background: var(--bg-page);
+  font-weight: var(--fw-regular);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display headlines: athletic, tight tracking */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+h1 { font-size: var(--text-h1); }
+h2 { font-size: var(--text-h2); }
+h3 { font-size: var(--text-h3); letter-spacing: var(--tracking-snug); }
+h4 { font-size: var(--text-h4); letter-spacing: var(--tracking-snug); }
+
+p { margin: 0; text-wrap: pretty; }
+
+a { color: var(--text-accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Mono eyebrow utility */
+.sway-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Display utilities */
+.sway-display-xl { font-family: var(--font-display); font-weight: var(--fw-black); font-size: var(--text-display-xl); line-height: var(--lh-tight); letter-spacing: var(--tracking-tight); }
+.sway-display-l  { font-family: var(--font-display); font-weight: var(--fw-extra); font-size: var(--text-display-l);  line-height: var(--lh-tight); letter-spacing: var(--tracking-tight); }
+
+::selection { background: var(--cobalt-500); color: var(--white); }
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
