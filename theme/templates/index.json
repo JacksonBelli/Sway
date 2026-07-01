@@ -1,0 +1,46 @@
+{
+  "sections": {
+    "hero": { "type": "sway-hero", "settings": {} },
+    "stats": {
+      "type": "sway-stats-band",
+      "blocks": {
+        "s1": { "type": "stat", "settings": { "number": "+22%", "label": "Avg. focus index after 30 days" } },
+        "s2": { "type": "stat", "settings": { "number": "14h", "label": "Active battery life" } },
+        "s3": { "type": "stat", "settings": { "number": "36g", "label": "Lighter than most sunglasses" } },
+        "s4": { "type": "stat", "settings": { "number": "4.8", "label": "Average rating, 1,204 reviews" } }
+      },
+      "block_order": ["s1","s2","s3","s4"]
+    },
+    "features": {
+      "type": "sway-features-grid",
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "title": "Focus index", "body": "See your attention quality hour by hour and learn when your mind performs best." } },
+        "f2": { "type": "feature", "settings": { "title": "Flow cues", "body": "Gentle prompts keep you in deep work and pull you back the moment you drift." } },
+        "f3": { "type": "feature", "settings": { "title": "Wind-down", "body": "Evening cues help your mind downshift so tomorrow starts sharp." } },
+        "f4": { "type": "feature", "settings": { "title": "All-day battery", "body": "14 hours on a charge. A 20-minute top-up gets you through the afternoon." } }
+      },
+      "block_order": ["f1","f2","f3","f4"]
+    },
+    "design": {
+      "type": "sway-design-showcase",
+      "blocks": {
+        "d1": { "type": "spec", "settings": { "number": "36g", "label": "Featherlight" } },
+        "d2": { "type": "spec", "settings": { "number": "14h", "label": "All-day battery" } },
+        "d3": { "type": "spec", "settings": { "number": "IPX4", "label": "Sweat-proof" } }
+      },
+      "block_order": ["d1","d2","d3"]
+    },
+    "tech": { "type": "sway-tech-reveal", "settings": {} },
+    "cta": { "type": "sway-cta-band", "settings": {} },
+    "footer": {
+      "type": "sway-footer",
+      "blocks": {
+        "c1": { "type": "link_column", "settings": { "title": "Product", "link_1_label": "S1 Frames", "link_2_label": "Lenses", "link_3_label": "Accessories", "link_4_label": "Compare" } },
+        "c2": { "type": "link_column", "settings": { "title": "Company", "link_1_label": "Science", "link_2_label": "About", "link_3_label": "Careers", "link_4_label": "Press" } },
+        "c3": { "type": "link_column", "settings": { "title": "Support", "link_1_label": "Help center", "link_2_label": "Warranty", "link_3_label": "Returns", "link_4_label": "Contact" } }
+      },
+      "block_order": ["c1","c2","c3"]
+    }
+  },
+  "order": ["hero","stats","features","design","tech","cta","footer"]
+}
